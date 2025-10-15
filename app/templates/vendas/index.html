@@ -4,5 +4,57 @@
 Página de Vendas    
 {% endblock title %}
 {% block content %}
-<h1>Pagina de vendas</h1>
+<div class="card-header">
+     <div class="row mb-4">  
+        {% for chave, valor in resumo.items() %}
+            <div class="col-md-3"> 
+                <div class="card text-center"> 
+                    <div class="card-header">
+                        {{ chave | replace('_', ' ') | capitalize }}
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ valor }}</h5>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+    </div>
+    <table class="table">
+         <thead>
+            <tr class="text-center">
+                <th>Código</th>
+                <th>Cliente</th>
+                <th>Categoria</th>
+                <th>Produto</th>
+                <th>Complemento</th>
+                <th>Qtdade</th>
+                <th>Vendido</th>
+                <th>Recebido</th>
+                <th>À receber</th>
+                <th>Data compra</th>
+                <th>Baixa Estoque?</th>
+                <th>Observações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for venda in vendas %}
+                <tr class="text-center">
+                    <td>{{ venda.codigo }}</td>
+                    <td>{{ venda.Cliente }}</td>
+                    <td>{{ venda.Categoria }}</td>
+                    <td>{{ venda.Produto }}</td>
+                    <td>{{ venda.Complemento }}</td>
+                    <td>{{ venda.Qtdade }}</td>
+                    <td>{{ venda.Vendido }}</td>
+                    <td>{{ venda.Recebido }}</td>
+                    <td>{{ venda['À receber'] }}</td> {# Use colchetes para chaves com espaços ou caracteres especiais #}
+                    <td>{{ venda['Data compra'] }}</td>
+                    <td>{{ venda['Baixa Estoque?'] }}</td>
+                    <td>{{ venda.Observações }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock content %}
