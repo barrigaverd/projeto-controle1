@@ -20,6 +20,10 @@ Página de Vendas
         {% endfor %}
 
     </div>
+    <div class="text-center">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNovaVenda">Inserir Venda</button>
+    </div>
+    
     <table class="table">
          <thead>
             <tr class="text-center">
@@ -41,20 +45,62 @@ Página de Vendas
             {% for venda in vendas %}
                 <tr class="text-center">
                     <td>{{ venda.codigo }}</td>
-                    <td>{{ venda.Cliente }}</td>
-                    <td>{{ venda.Categoria }}</td>
-                    <td>{{ venda.Produto }}</td>
-                    <td>{{ venda.Complemento }}</td>
-                    <td>{{ venda.Qtdade }}</td>
-                    <td>{{ venda.Vendido }}</td>
-                    <td>{{ venda.Recebido }}</td>
-                    <td>{{ venda['À receber'] }}</td> {# Use colchetes para chaves com espaços ou caracteres especiais #}
-                    <td>{{ venda['Data compra'] }}</td>
-                    <td>{{ venda['Baixa Estoque?'] }}</td>
-                    <td>{{ venda.Observações }}</td>
+                    <td>{{ venda.cliente }}</td>
+                    <td>{{ venda.categoria }}</td>
+                    <td>{{ venda.produto }}</td>
+                    <td>{{ venda.complemento }}</td>
+                    <td>{{ venda.qtdade }}</td>
+                    <td>{{ venda.vendido }}</td>
+                    <td>{{ venda.recebido }}</td>
+                    <td>{{ venda.a_receber }}</td> {# Use colchetes para chaves com espaços ou caracteres especiais #}
+                    <td>{{ venda.data_compra }}</td>
+                    <td>{{ venda.baixa_estoque }}</td>
+                    <td>{{ venda.observações }}</td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
+<div class="modal fade" id="modalNovaVenda" ...>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Inclusão de Nova Venda</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+            <form method="POST" novalidate id="formVenda">
+                {{ form.hidden_tag() }}
+                <div id="etapaVenda1">
+                    {{ form.tipo_venda.label }}
+                    {{ form.tipo_venda }}
+                </div>
+                <div id="etapaVenda2" style="display: none;">
+                    {{ form.cliente.label }}
+                    {{ form.cliente(class="form-control") }}
+                    {{ form.produto.label }}
+                    {{ form.produto(class="form-control") }}
+                    {{ form.qtdade.label }}
+                    {{ form.qtdade(class="form-control") }}
+                    {{ form.a_receber.label }}
+                    {{ form.a_receber(class="form-control") }}
+                    {{ form.data_compra.label }}
+                    {{ form.data_compra(class="form-control") }}
+                    {{ form.baixa_estoque.label }}
+                    {{ form.baixa_estoque(class="form-control") }}
+                    {{ form.observacoes.label }}
+                    {{ form.observacoes(class="form-control") }}
+                    
+                </div>
+                <div class="modal-footer">
+                    {{ form.submit(class="btn btn-primary") }}
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+             </form>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
 {% endblock content %}
