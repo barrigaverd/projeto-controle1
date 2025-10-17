@@ -10,3 +10,4 @@ class Produto(db.Model):
     qtdade_estoque = db.Column(db.Integer, nullable=False)
 
     categoria_id = db.Column(db.Integer, db.ForeignKey('categoria.id'), nullable=False)
+    vendas = db.relationship('Venda', backref='produto', lazy=True)

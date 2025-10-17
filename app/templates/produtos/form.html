@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>{{ page_title }}</h3>
+<hr>
+<form method="POST" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="row">
+        <div class="col-md-8 mb-3">
+            {{ form.nome.label(class="form-label") }}
+            {{ form.nome(class="form-control" + (" is-invalid" if form.nome.errors else "")) }}
+            {% if form.nome.errors %}<div class="invalid-feedback">{% for e in form.nome.errors %}<span>{{ e }}</span>{% endfor %}</div>{% endif %}
+        </div>
+        <div class="col-md-4 mb-3">
+            {{ form.categoria_id.label(class="form-label") }}
+            {{ form.categoria_id(class="form-select" + (" is-invalid" if form.categoria_id.errors else "")) }}
+            {% if form.categoria_id.errors %}<div class="invalid-feedback">{% for e in form.categoria_id.errors %}<span>{{ e }}</span>{% endfor %}</div>{% endif %}
+        </div>
+        <div class="col-md-4 mb-3">
+            {{ form.preco_custo.label(class="form-label") }}
+            
+            {{ form.preco_custo(class="form-control" + (" is-invalid" if form.preco_custo.errors else ""), type="number", step="0.01") }}
+
+            {% if form.preco_custo.errors %}<div class="invalid-feedback">{% for e in form.preco_custo.errors %}<span>{{ e }}</span>{% endfor %}</div>{% endif %}
+        </div>
+        <div class="col-md-4 mb-3">
+            {{ form.preco_venda.label(class="form-label") }}
+            
+            {{ form.preco_venda(class="form-control" + (" is-invalid" if form.preco_venda.errors else ""), type="number", step="0.01") }}
+
+            {% if form.preco_venda.errors %}<div class="invalid-feedback">{% for e in form.preco_venda.errors %}<span>{{ e }}</span>{% endfor %}</div>{% endif %}
+        </div>
+        <div class="col-md-4 mb-3">
+            {{ form.qtdade_estoque.label(class="form-label") }}
+            {{ form.qtdade_estoque(class="form-control" + (" is-invalid" if form.qtdade_estoque.errors else "")) }}
+            {% if form.qtdade_estoque.errors %}<div class="invalid-feedback">{% for e in form.qtdade_estoque.errors %}<span>{{ e }}</span>{% endfor %}</div>{% endif %}
+        </div>
+         <div class="col-md-12 mb-3">
+            {{ form.complemento.label(class="form-label") }}
+            {{ form.complemento(class="form-control") }}
+        </div>
+    </div>
+    <hr>
+    {{ form.submit(class="btn btn-primary") }}
+    <a href="{{ url_for('produtos.index') }}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}
