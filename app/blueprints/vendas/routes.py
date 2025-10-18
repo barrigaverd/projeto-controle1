@@ -1,6 +1,7 @@
 # Em app/blueprints/vendas/routes.py
 
 from flask import Blueprint, render_template, redirect, url_for, flash, request
+from app.blueprints import vendas
 from app.extensions import db
 from app.models.venda import Venda
 from .forms import NovaVendaForm
@@ -49,3 +50,35 @@ def index():
     resumo = {'quantidade': 16, 'receita': 291, 'recebido': 122, 'a_receber': 169}
     
     return render_template('vendas/index.html', page_title='Venda de Produtos', resumo=resumo, vendas=vendas, form=form)
+
+@vendas_bp.route('/edit/<int:id>', methods=['GET', 'POST'])
+def edit(id):
+    edit_venda = Venda.query.get_or_404(id)
+    form = NovaVendaForm(obj=edit_venda)
+
+    if form.validate_on_submit():
+        edit_venda.tipo_venda = form.tipo_venda.data
+        edit_venda.cliente_id = form.cliente.data.id
+        edit_venda.produto_id = form.produto.data.id
+        edit_venda.data_venda = form.data_venda.data
+        edit_venda.qtdade = form.qtdade.data
+        edit_venda.valor_venda = form.valor_venda.data
+        edit_venda.valor_recebido = form.valor_recebido.data
+        edit_venda.forma_pagamento = form.forma_pagamento.data
+        edit_venda.observacoes = form.observacoes.data
+
+        db.session.commit()
+        flash("Venda atualizada com sucesso!", "success")
+        return redirect(url_for("vendas.index"))
+    
+    return render_template("vendas/form.html", form=form, page_title=f"Editar Venda #{edit_venda.id}")
+
+@vendas_bp.route('/<int:id>/delete', methods=['POST'])
+def delete(id):
+    venda = Venda.query.get_or_404(id)
+    db.session.delete(venda)
+    db.session.commit()
+    flash("Venda excluída com sucesso!", "success")
+    return redirect(url_for("vendas.index"))
+
+

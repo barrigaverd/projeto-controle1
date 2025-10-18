@@ -50,8 +50,10 @@
                     <td>R$ {{ "%.2f"|format(venda.valor_venda|float) }}</td>
                     <td>R$ {{ "%.2f"|format(venda.valor_recebido|float) }}</td>
                     <td>
-                        <a href="#" class="btn btn-sm btn-warning">Editar</a>
-                        <a href="#" class="btn btn-sm btn-danger">Excluir</a>
+                        <a href="{{ url_for('vendas.edit', id=venda.id) }}" class="btn btn-sm btn-warning">Editar</a>
+                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-item-id="{{ venda.id }}" data-item-info="Venda #{{ venda.id }} de {{ venda.cliente.nome }}">
+                            Excluir
+                        </button>
                     </td>
                 </tr>
                 {% else %}
@@ -60,6 +62,26 @@
             </tbody>
         </table>
     </div>
+</div>
+<div class="modal fade" id="deleteModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirmar Exclusão</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        Você tem certeza que deseja excluir o item <strong id="itemInfoModal"></strong>? Esta ação não pode ser desfeita.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <form id="deleteForm" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="modal fade" id="modalNovaVenda" tabindex="-1">
@@ -126,6 +148,7 @@
     </div>
   </div>
 </div>
+
 {% endblock %}
 {% block scripts %}
 <script>
@@ -137,6 +160,19 @@ document.addEventListener('DOMContentLoaded', function () {
     const salvarBtn = document.getElementById('salvarVendaBtn');
     const modalNovaVenda = document.getElementById('modalNovaVenda');
     const formVenda = document.getElementById('formVenda');
+    var deleteModal = document.getElementById('deleteModal');
+
+    deleteModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var itemId = button.getAttribute('data-item-id');
+        var itemInfo = button.getAttribute('data-item-info');
+
+        var modalBody = deleteModal.querySelector('#itemInfoModal');
+        var deleteForm = deleteModal.querySelector('#deleteForm');
+
+        modalBody.textContent = itemInfo;
+        deleteForm.action = '/vendas/' + itemId + '/delete';
+    });
 
     // 2. Adiciona um "ouvinte" para cada botão de rádio
     radiosTipoVenda.forEach(function(radio) {
