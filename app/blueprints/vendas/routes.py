@@ -1,6 +1,6 @@
 # Em app/blueprints/vendas/routes.py
 
-from flask import Blueprint, render_template, redirect, url_for, flash
+from flask import Blueprint, render_template, redirect, url_for, flash, request
 from app.extensions import db
 from app.models.venda import Venda
 from .forms import NovaVendaForm
@@ -37,7 +37,11 @@ def index():
         
         flash('Venda registrada com sucesso!', 'success')
         return redirect(url_for('vendas.index'))
-
+    elif request.method == 'POST':
+        print("="*20)
+        print("VALIDAÇÃO DO FORMULÁRIO FALHOU")
+        print("ERROS ENCONTRADOS:", form.errors)
+        print("="*20)
     # Busca todas as vendas do banco de dados para exibir na tabela
     vendas = Venda.query.order_by(Venda.data_venda.desc()).all()
     

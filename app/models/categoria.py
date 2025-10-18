@@ -6,3 +6,5 @@ class Categoria(db.Model):
     tipo_categoria = db.Column(db.String(20), nullable=False)
     
     produtos = db.relationship('Produto', backref='categoria', lazy=True)
+    # Adicione esta linha para a relação direta com Venda
+    vendas = db.relationship('Venda', backref='categoria', lazy=True)

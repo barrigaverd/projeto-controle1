@@ -69,47 +69,95 @@
         <h5 class="modal-title">Inclusão de Nova Venda</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
-      <form method="POST" novalidate>
+      <form method="POST">
           {{ form.hidden_tag() }}
           <div class="modal-body">
               <div class="row">
-                  <div class="col-12 mb-3">{{ form.tipo_venda.label }}<br>{{ form.tipo_venda }}</div>
+                  <div class="col-12 mb-3">
+                      {{ form.tipo_venda.label(class="form-label") }}<br>{{ form.tipo_venda(required=True) }}
+                      {% if form.tipo_venda.errors %}<div class="text-danger small">{% for e in form.tipo_venda.errors %}{{ e }}{% endfor %}</div>{% endif %}
+                  </div>
                   <div class="col-md-6 mb-3">
                       {{ form.cliente.label(class="form-label") }}
-                      {{ form.cliente(class="form-select") }}
+                      {{ form.cliente(class="form-select" + (" is-invalid" if form.cliente.errors else ""), required=True) }}
+                      {% if form.cliente.errors %}<div class="invalid-feedback">{% for e in form.cliente.errors %}<span>{{ e }}</span>{% endfor %}</div>{% endif %}
                   </div>
                    <div class="col-md-6 mb-3">
                       {{ form.produto.label(class="form-label") }}
-                      {{ form.produto(class="form-select") }}
+                      {{ form.produto(class="form-select" + (" is-invalid" if form.produto.errors else ""), required=True) }}
+                      {% if form.produto.errors %}<div class="invalid-feedback">{% for e in form.produto.errors %}<span>{{ e }}</span>{% endfor %}</div>{% endif %}
                   </div>
                   <div class="col-md-6 mb-3">
                       {{ form.data_venda.label(class="form-label") }}
-                      {{ form.data_venda(class="form-control") }}
+                      {{ form.data_venda(class="form-control" + (" is-invalid" if form.data_venda.errors else ""), required=True) }}
+                      {% if form.data_venda.errors %}<div class="invalid-feedback">{% for e in form.data_venda.errors %}<span>{{ e }}</span>{% endfor %}</div>{% endif %}
                   </div>
                   <div class="col-md-6 mb-3">
                       {{ form.qtdade.label(class="form-label") }}
-                      {{ form.qtdade(class="form-control") }}
+                      {{ form.qtdade(class="form-control" + (" is-invalid" if form.qtdade.errors else ""), required=True) }}
+                      {% if form.qtdade.errors %}<div class="invalid-feedback">{% for e in form.qtdade.errors %}<span>{{ e }}</span>{% endfor %}</div>{% endif %}
                   </div>
                   <div class="col-md-6 mb-3">
                       {{ form.valor_venda.label(class="form-label") }}
-                      {{ form.valor_venda(class="form-control", type="number", step="0.01") }}
+                      {{ form.valor_venda(class="form-control" + (" is-invalid" if form.valor_venda.errors else ""), type="number", step="0.01", required=True) }}
+                      {% if form.valor_venda.errors %}<div class="invalid-feedback">{% for e in form.valor_venda.errors %}<span>{{ e }}</span>{% endfor %}</div>{% endif %}
                   </div>
                   <div class="col-md-6 mb-3">
                       {{ form.valor_recebido.label(class="form-label") }}
-                      {{ form.valor_recebido(class="form-control", type="number", step="0.01") }}
+                      {{ form.valor_recebido(class="form-control" + (" is-invalid" if form.valor_recebido.errors else ""), type="number", step="0.01", required=True) }}
+                      {% if form.valor_recebido.errors %}<div class="invalid-feedback">{% for e in form.valor_recebido.errors %}<span>{{ e }}</span>{% endfor %}</div>{% endif %}
                   </div>
                   <div class="col-md-12 mb-3">
                       {{ form.forma_pagamento.label(class="form-label") }}
-                      {{ form.forma_pagamento(class="form-control") }}
+                      {{ form.forma_pagamento(class="form-control" + (" is-invalid" if form.forma_pagamento.errors else ""), required=True) }}
+                      {% if form.forma_pagamento.errors %}<div class="invalid-feedback">{% for e in form.forma_pagamento.errors %}<span>{{ e }}</span>{% endfor %}</div>{% endif %}
+                  </div>
+                   <div class="col-md-12 mb-3">
+                      {{ form.observacoes.label(class="form-label") }}
+                      {{ form.observacoes(class="form-control") }}
                   </div>
               </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            {{ form.submit(class="btn btn-primary") }}
+            {{ form.submit(class="btn btn-primary", id="salvarVendaBtn", disabled=True) }}
           </div>
       </form>
     </div>
   </div>
 </div>
+{% endblock %}
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // --- LÓGICA CORRIGIDA E SIMPLIFICADA PARA O MODAL DE NOVA VENDA ---
+    
+    // 1. Seleciona os elementos que realmente importam
+    const radiosTipoVenda = document.querySelectorAll('input[name="tipo_venda"]');
+    const salvarBtn = document.getElementById('salvarVendaBtn');
+    const modalNovaVenda = document.getElementById('modalNovaVenda');
+    const formVenda = document.getElementById('formVenda');
+
+    // 2. Adiciona um "ouvinte" para cada botão de rádio
+    radiosTipoVenda.forEach(function(radio) {
+        radio.addEventListener('change', function() {
+            // A ÚNICA COISA QUE FAZEMOS É HABILITAR O BOTÃO DE SALVAR.
+            // Não nos preocupamos mais com a 'etapa2'.
+            if (salvarBtn) {
+                salvarBtn.disabled = false;
+            }
+        });
+    });
+
+    // 3. Lógica para resetar o form quando o modal fecha (essencial)
+    modalNovaVenda.addEventListener('hidden.bs.modal', function () {
+        if (formVenda) {
+            formVenda.reset(); // Limpa os campos do formulário
+        }
+        if (salvarBtn) {
+            salvarBtn.disabled = true; // Desabilita o botão novamente para a próxima vez
+        }
+    });
+});
+</script>
 {% endblock %}
